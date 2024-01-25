@@ -8,8 +8,8 @@ library(scales)
 library(ape)
 library(ggtree)
 
-############################################
 # ADJUST the following lines as needed
+############################################
 
 # Variables for input files (matrix and newick files are expected to be in the same path)
 path_to_files="/PATH/TO/INPUT_FILES" # Path to files
@@ -20,6 +20,7 @@ newick_file <- "FILENAME_ANI_MATRIX.newick" # Should be a newick tree
 path_to_output="/PATH/TO/OUTPUT" # Path
 plot_file <- "PLOT_NAME.png" # Plot name with no dendogram
 plot_file_dendrogram <- "PLOT_NAME_DENDROGRAM.png" # Plot name with dendogram
+
 ##########################################
 
 # The following code contains the color palette that will be used for the heatmap values.
