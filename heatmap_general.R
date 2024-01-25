@@ -30,9 +30,10 @@ ani_matrix <- as.matrix(read.csv(full_path_ani_matrix, sep = "\t", header = TRUE
 full_path_ani_tree=full_path <- paste(path_to_files, newick_file, sep = "/")
 dendrogram <- read.tree(full_path_ani_tree)
 
-# Melt
+# Melt matrix so that headers and rownames become "variables" (Var1 and Var2) and percent of identity "values"
 melted_cormat <- melt(ani_matrix)
-# Transform values to percentage
+
+# Transform values to percentages
 melted_cormat <- melted_cormat %>% mutate(value = value * 100)
 
 # Extract labels from dendrogram
@@ -41,20 +42,20 @@ dendrogram_labels <- dendrogram$tip.label
 # Identify common labels between dendrogram and melted_cormat
 common_labels <- intersect(dendrogram_labels, unique(c(melted_cormat$Var1, melted_cormat$Var2)))
 
-# Reorder the melted_cormat based on common labels
+# Reorder the melted_cormat based on common labels to ensure the plot will be a specular image in diagonal
 melted_cormat <- melted_cormat %>%
   filter(Var1 %in% common_labels, Var2 %in% common_labels) %>%
   mutate(Var1 = factor(Var1, levels = rev(dendrogram_labels)),
          Var2 = factor(Var2, levels = rev(dendrogram_labels))) %>%
   arrange(Var1, Var2)
 
-# Specify 10 breaks for the color gradient
+# Specify 10 breaks for the color gradient for value 90%-100%
 custom_breaks <- seq(90, 100, length.out = 3)
 
 # Create a tree object from the dendrogram
 tree <- as.phylo(dendrogram)
 
-# Create plot
+# Create the heatmap plot with ggplot
 p <- ggplot(data = melted_cormat, aes(x=Var1, y=Var2, fill=value)) + 
     geom_tile() +
     scale_fill_gradientn(colors = c("#053061", "#2166AC", "#4393C3", "#92C5DE", "#D1E5F0", "white", "#FDDBC7", "#F4A582", "#D6604D", "#B2182B", "#67001F"), 
@@ -75,12 +76,10 @@ p <- ggplot(data = melted_cormat, aes(x=Var1, y=Var2, fill=value)) +
 p
 
 # Save the heatmap as a PNG file with 300 dpi
-# Read the dendrogram from the Newick file
 full_path_plot=full_path <- paste(path_to_output, plot_file, sep = "/")
 ggsave(full_path_plot, plot = p, dpi = 300)
 
-
-# Create tree object from the dendrogram
+# Create a tree object from the dendrogram to be added to the plot
 tree <- as.phylo(dendrogram)
 
 # Add dendrogram to the heatmap plot
