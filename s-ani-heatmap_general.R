@@ -97,4 +97,4 @@ p2
 
 # Save the heatmap + dendrogram as a PNG file with 300 dpi
 full_path_plot_dendrogram=full_path <- paste(path_to_output, plot_file_dendrogram, sep = "/")
-ggsave(full_path_plot_dendrogram, plot = p, dpi = 300)
+ggsave(full_path_plot_dendrogram, plot = p2, dpi = 300)
